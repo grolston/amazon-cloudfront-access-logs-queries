@@ -10,7 +10,7 @@ Description: >
     Athena and AWS Glue).
 
 Parameters:
-  ResourcePrefix: 
+  ResourcePrefix:
     Type: String
     Default: 'myapp'
     AllowedPattern: '[a-z0-9]+'
@@ -18,21 +18,21 @@ Parameters:
     MaxLength: 20
     Description: >
         Prefix that is used for the created resources (20 chars, a-z and 0-9 only)
-  NewKeyPrefix: 
+  NewKeyPrefix:
     Type: String
     Default: 'new/'
     AllowedPattern: '[A-Za-z0-9\-]+/'
     Description: >
         Prefix of new access log files that are written by Amazon CloudFront.
         Including the trailing slash.
-  GzKeyPrefix: 
+  GzKeyPrefix:
     Type: String
     Default: 'partitioned-gz/'
     AllowedPattern: '[A-Za-z0-9\-]+/'
     Description: >
         Prefix of gzip'ed access log files that are moved to the Apache Hive
         like style. Including the trailing slash.
-  ParquetKeyPrefix: 
+  ParquetKeyPrefix:
     Type: String
     Default: 'partitioned-parquet/'
     AllowedPattern: '[A-Za-z0-9\-]+/'
@@ -155,14 +155,14 @@ Resources:
                 AccessLogsUploadedEvent:
                     Type: S3
                     Properties:
-                        Bucket: !Ref CloudFrontAccessLogsBucket 
+                        Bucket: !Ref CloudFrontAccessLogsBucket
                         Events: s3:ObjectCreated:*
                         Filter:
                             S3Key:
                                 Rules:
                                 - Name: prefix
                                   Value: !Ref NewKeyPrefix
-    CloudFrontAccessLogsBucket :
+    CloudFrontAccessLogsBucket:
         Type: "AWS::S3::Bucket"
         Description: "Bucket for Amazon CloudFront access logs"
         Properties:
@@ -488,7 +488,7 @@ Resources:
             - - '/* Presto View: '
               - Fn::Base64:
                   Fn::Sub:
-                  - |- 
+                  - |-
                     {
                       "originalSql": "SELECT *, \"$path\" as file FROM ${database}.${partitioned_gz_table} WHERE (concat(year, month, day, hour) >= date_format(date_trunc('hour', ((current_timestamp - INTERVAL  '15' MINUTE) - INTERVAL  '1' HOUR)), '%Y%m%d%H')) UNION ALL SELECT *, \"$path\" as file FROM ${database}.${partitioned_parquet_table} WHERE (concat(year, month, day, hour) < date_format(date_trunc('hour', ((current_timestamp - INTERVAL  '15' MINUTE) - INTERVAL  '1' HOUR)), '%Y%m%d%H'))",
                       "catalog": "awsdatacatalog",
