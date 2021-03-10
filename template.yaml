@@ -40,6 +40,7 @@ Parameters:
         Prefix of parquet files that are created in Apache Hive
         like style by the CTAS query. Including the trailing slash.
 Resources:
+
     TransformPartFn:
         Type: AWS::Serverless::Function
         Properties:
@@ -88,6 +89,7 @@ Resources:
                 Type: Schedule
                 Properties:
                   Schedule: cron(1 * * * ? *)
+
     CreatePartFn:
         Type: AWS::Serverless::Function
         Properties:
@@ -129,6 +131,7 @@ Resources:
                 Type: Schedule
                 Properties:
                   Schedule: cron(55 * * * ? *)
+
     MoveNewAccessLogsFn:
         Type: AWS::Serverless::Function
         Properties:
@@ -162,6 +165,7 @@ Resources:
                                 Rules:
                                 - Name: prefix
                                   Value: !Ref NewKeyPrefix
+
     CloudFrontAccessLogsBucket:
         Type: "AWS::S3::Bucket"
         Description: "Bucket for Amazon CloudFront access logs"
@@ -176,6 +180,7 @@ Resources:
               BlockPublicPolicy: Yes
               IgnorePublicAcls: Yes
               RestrictPublicBuckets: Yes
+
     CloudFrontAccessLogsBucketPolicy:
       Type: "AWS::S3::BucketPolicy"
       Properties:
@@ -205,6 +210,7 @@ Resources:
           CatalogId: !Ref AWS::AccountId
           DatabaseInput:
             Name: !Sub "${ResourcePrefix}_cf_access_logs_db"
+
     PartitionedGzTable:
       Type: AWS::Glue::Table
       Properties:
@@ -300,6 +306,7 @@ Resources:
                 field.delim": "\t"
                 serialization.format: "\t"
               SerializationLibrary: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe
+
     PartitionedParquetTable:
       Type: AWS::Glue::Table
       Properties:
@@ -392,6 +399,7 @@ Resources:
             Location: !Sub "s3://${ResourcePrefix}-${AWS::AccountId}-cf-access-logs/${ParquetKeyPrefix}"
             SerdeInfo:
               SerializationLibrary: org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe
+
     CombinedView:
       Type: AWS::Glue::Table
       Properties:
