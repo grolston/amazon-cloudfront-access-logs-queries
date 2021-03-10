@@ -168,7 +168,6 @@ Resources:
 
     CloudFrontAccessLogsBucket:
         Type: "AWS::S3::Bucket"
-        Description: "Bucket for Amazon CloudFront access logs"
         Properties:
             BucketName: !Sub "${ResourcePrefix}-${AWS::AccountId}-cf-access-logs"
             BucketEncryption:
